@@ -15,7 +15,7 @@
   \********************/
 /***/ (() => {
 
-eval("\n\n//# sourceURL=webpack://html-training/./src/app.js?");
+eval("$(function () {\n  constrMorpion();\n});\n\n//# sourceURL=webpack://html-training/./src/app.js?");
 
 /***/ }),
 

@@ -1,19 +1,32 @@
-const btnStart = document.querySelector("#timerStart");
-const btnPause = document.querySelector("#timerPause");
-const btnResume = document.querySelector("#timerResume");
-const playTime = document.querySelector("#timerTime");
-const date = new Date(0);
+let btnStart;
+let btnPause;
+let btnResume;
+let playTime;
+let date;
 let intervalId;
 
+
+
+const constrTimer = () => {
+    btnStart = $("#timerStart");
+    btnPause = $("#timerPause");
+    btnResume = $("#timerResume");
+    playTime = $("#timerTime");
+    date = new Date(0);
+    btnStart.on("click", start);
+    btnPause.on("click", pause);
+    btnResume.on("click", resume);
+}
+
 const toggle = (disapear, appear) => {
-    disapear.classList.add("d-none");
-    disapear.classList.remove("d-block");
-    appear.classList.add("d-block");
-    appear.classList.remove("d-none");
+    disapear.addClass("d-none");
+    disapear.removeClass("d-block");
+    appear.addClass("d-block");
+    appear.removeClass("d-none");
 };
 
 const increment = () => {
-    playTime.innerText = date.toISOString().substr(14, 5);
+    playTime.text(date.toISOString().substr(14, 5));
     date.setSeconds(date.getSeconds() + 1);
 }
 
@@ -38,6 +51,4 @@ const stop = () => {
     clearInterval(intervalId);
 };
 
-btnStart.addEventListener("click", start);
-btnPause.addEventListener("click", pause);
-btnResume.addEventListener("click", resume);
+

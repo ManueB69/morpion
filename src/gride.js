@@ -1,70 +1,73 @@
-const cells = document.querySelectorAll(".case");
+let cells;
 
-let markList = [];
-let emptyList =[];
-let mark="";
-let index=0;
-let random=0;
+let markList;
+let emptyList;
+let mark;
+let index;
+let random;
+let combinaisonList;
 
-const combinaisonList = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-];
+const constrMorpion = () => {
+    constrTimer();
+    constrScore();
+    cells = $(".case");
+    markList =[];
+    emptyList =[];
+    mark="";
+    index=0;
+    random=0;
+    btnStart.on("click", initGride);
+    btnPause.on("click", disableGride);
+    btnResume.on("click", enableGride);
+    combinaisonList = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+};
 
 const markCircle = (e) => {
-
-    if( play(e.target,"circle") ){
-
-    };
-    
-  
+    const target=$(e.target);
+    if(play(target,"circle") ){
+        incrementPlayer();
+        showModal("L'humain (toi quoi !) ");
+        return;
+    }; 
     mark="cross";
     // disableGride();
     // timeOutID=setTimeout(cpuplay, 2000);
     index=cpuPlay();
-
     if(undefined===index) {
         //TODO afficher un modal "Tout le monde a perdu !"
+        showModal("Personne n'");
         finDePartie();
         return;
     };
-    const cellCPU = document.querySelector("#case"+index);
-    cellCPU.classList.add(mark);
-    markList[index] = mark;
-
-
-    if( hasWin(mark) ) {
-        finDePartie();
+    const cellCPU = $("#case"+index);
+    if(play (cellCPU, "cross") ){
         incrementCPU();
-        //  TODO : afficher le modal "L'ordi a gagné" = modal.show();
-    }
+        showModal("L'ordi ");
+    };
 };  
 
 const play=(cell, mark)=> {
-    index = parseInt(cell.id.substr(4));
+    index = parseInt(cell.attr("id").substr(4));
     if (markList[index]) {
         return false;
     }
-
-    cell.classList.add(mark);
+    cell.addClass(mark);
     markList[index] = mark;
-   
-
     if( hasWin(mark) ) {
         finDePartie();
-        incrementPlayer();
-        //  TODO : personnaliser le modal
-        showModal();
-        return false;
+        //  TODO : personnaliser le modal : showModal();
+        return mark;
     };
-
-    return true;
+    return false;
 };
 
 const finDePartie = () => {
@@ -76,7 +79,7 @@ const finDePartie = () => {
 const cpuPlay = () => {
     emptyList.splice(0);
 
-    cells.forEach( (value, ind)=> {
+    cells.each( (ind, value)=> {
         if( !markList[ind] ) {
             emptyList.push(ind);
         }
@@ -99,24 +102,26 @@ const hasWin = (mark) => {
 
 const initGride = () => {
     markList.splice(0);
-    cells.forEach((cell) => {
-        cell.classList.remove("circle", "cross");
+    cells.each((ind, cellul) => {
+        const cell=$(cellul);
+        cell.removeClass("circle");
+        cell.removeClass("cross");
     });
     enableGride();
 }
 
 const enableGride = () => {
-    cells.forEach((cell) => {
-        cell.addEventListener("click", markCircle)
+    cells.each((ind, cellul) => {
+        const cell=$(cellul);
+        cell.on("click", markCircle);
     });
 }
 
 const disableGride = () => {
-    cells.forEach(cell => {
-        cell.removeEventListener("click", markCircle)
+    cells.each( (ind, cellul) => {
+        const cell=$(cellul);
+        cell.off("click", markCircle);
     });
 }
 
-btnStart.addEventListener("click", initGride);
-btnPause.addEventListener("click", disableGride);
-btnResume.addEventListener("click", enableGride);
+
